@@ -1,52 +1,43 @@
+import os
 
+USER_FILE = "./Databases/customerData.txt"
 
+def load_users():
+    """Load users from the text file into a dictionary."""
+    users = {}
 
-def Login():
+    with open(USER_FILE, "r") as file:
+        Data=file.readlines()
+        for line in Data:
+            name,username,password,role = line.strip().split(",")
+            users[username] = (password.strip(), role.strip(), name.strip())
 
-    # password and emails for Admins,manager
-    user={
-        "admin": ["admin123", "admin"],
-        "manager": ["manager123", "manager"],
-        "chef": ["chef123", "chef"],
-        "customer": ["customer123", "customer"]
-    }
-    
+    return users
 
-    # input Email and Password
-    email=input("Email: ")
-    password=input("Password: ")
-    
-    # user attempts if password is failed
-    attempt=1
-    max_attempts=3
-    
-    while attempt<=max_attempts: 
-        if email in user and password in user[email]:
-           
-            print("redirection the related page")
-            break
+def authenticate():
+    """Authenticate user with three login attempts."""
+    users = load_users()
+    attempts = 0
 
-        elif email not in user and password not in user[email]:
-            print("Incorret credentials! Please try again....")
+    while attempts < 3:
+        username = input("Enter username: ")
+        password = input("Enter password: ")
 
-        attempt+=1
+        if username in users and password==users[username][0]:
+            print(f"Login successful! Welcome, {username}. Role: {users[username][1]}")
+            return users[username][1], username  # Return role and username
 
-    if attempt>=3: 
-        print("To many attempts account is blocked")
+        else:
+            print("Invalid username or password. Try again.")
+            attempts += 1
 
-if __name__=='__main__': 
-    Login()
+    print("Maximum login attempts reached. Exiting...")
+    return None, None
 
+if __name__ == "__main__":
 
-
-
-
-
-
-
-
-
-
-
-
-
+    role, user = authenticate()
+    if role:
+        print(f"Access granted for {role} account.")
+    else:
+        print("Access denied.")

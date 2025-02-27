@@ -1,20 +1,4 @@
-from Packages import LogIn
-from Packages import signUp
-def main():
-    print("Welcome to Delicious Restaurant Management System!\n")
-
-    print("1. Log In" )
-    print("2. Sign up")
-    choice=int(input("Choice(1/2): "))
-    if choice== 1:
-        LogIn.authenticate()
-
-    elif choice ==2:
-        signUp.sign_up()
-
-main()
-        
-    
+  
 
 
 #     if role == "Admin":
