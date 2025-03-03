@@ -1,0 +1,10 @@
+navin,navin123,navin123,customer
+sital,sital@gamil.com,sital@123,manager
+biraj,biraj@123,biraj,chef
+sfs,sfsf,sfsfds,sdfsdf
+sdfds,sfdsf,dsfsfdsf,sdfs
+sital,sital@123,sitalsingh,manager
+sandesh,sandesh123,sandesh1234,chef
+kukur,kukur123,kukur123446,customer
+monkey,monkey123,monkey1233455,customer
+kawa,kawa123,kawa123,customer

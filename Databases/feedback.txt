@@ -1,0 +1,8 @@
+sital,your food is good
+ramesh,your food is bad
+lakhe,you lack manners
+
+
+
+
+

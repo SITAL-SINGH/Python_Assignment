@@ -1,0 +1,166 @@
+''' Load users Data from the Database or UsersData.txt file'''
+def load_users():
+    """Load users from the text file into a dictionary."""
+    users = {}
+    with open("./Databases/UsersData.txt", "r") as file:
+        for line in file:
+            line = line.strip()
+            if not line:  # Skip empty lines
+                continue  
+            parts = line.split(",")
+            if len(parts) != 4:  # Ensure exactly 4 values
+                print(f"⚠️ Skipping malformed line: {line}")  
+                continue  
+            name, username, password, role = parts
+            users[username] = [name, password, role]
+    return users
+
+''' save users Data in the Database or UsersData.txt file'''
+def save_users(users):
+    """Save updated user data back to the file."""
+    with open("./Databases/UsersData.txt", "w") as file:
+        for username, details in users.items():
+            name, password, role = details  # Extract values correctly
+            file.write(f"{name},{username},{password},{role}\n")
+
+''' property of admin to edit, add or delete the staffs'''
+def manageStaff():
+
+    """Allows the admin to add a new user."""
+    def add_staff():
+        users = load_users()
+        name=input("Name: ")
+
+        while True: 
+            username = input("Enter new username: ")
+            if username in users:
+                print("Username already exists!")
+            else:
+                break
+        password = input("Enter password: ")
+        while True:
+            role = input("Enter role (Admin/Manager/Chef/Customer): ")
+            if role.strip().lower() not in ["customer","manager","chef","admin"]:
+                print("Invalid role!!")
+            else:
+                break
+
+        users[username] = (name,password,role)
+        save_users(users)
+        print("User added successfully!")
+
+    def editStaff():
+        """Allows the admin to add a edit user profile."""
+        users = load_users()
+        existEmail=input("Existing Username/Email: ")
+        if existEmail in users:
+            name=input("New Name: ")
+            newUsername=input("New Email/Username: ")
+            new_password = input("Enter your new password: ")
+            role = input("Enter role (Admin/Manager/Chef/Customer): ")
+        
+            users[existEmail][0] = name  # Update the name
+            users[existEmail][1] = new_password  # Update the password
+            users[existEmail][2] = role  # Update the role
+            users[existEmail] = newUsername  # Update the email or password
+            save_users(users)  # Save changes to file
+            print("✅ Profile updated successfully!")
+            
+        else:
+            print("❌ User not found.")
+
+    def delete_staff():
+        """Allows the admin to delete a user."""
+        users = load_users()
+        username = input("Enter username to delete: ")
+        if username in users:
+            del users[username]
+            save_users(users)
+            print("User deleted successfully!")
+        else:
+            print("User not found!")
+    
+    def manage():
+        ''' interface for the admin to add , edit or delete the users data'''
+        print(" Actions: ")
+        print("1. Add")
+        print("2. Edit")
+        print("3. Delete")
+        
+        validInputs=("1","2","3","add","edit","delete")
+        # input for which action to perform
+        AdiminAction=input("Choose the action: ")
+        AdiminAction=AdiminAction.strip().lower()
+        if AdiminAction in validInputs:
+            if AdiminAction=="add" or AdiminAction=="1":
+                add_staff()
+            
+            elif AdiminAction=="edit" or AdiminAction=="2":
+                editStaff()
+
+            elif AdiminAction=="delete" or AdiminAction=="3":
+                delete_staff()
+        
+        else:
+            raise("Not valid Action")
+    
+    manage()
+
+
+
+
+
+def loadSales():
+    pass
+
+def loadFeedback():
+    print("Feedback Section")
+    with open("./Databases/feedback.txt", "r") as file:
+        feedbackData=file.readlines()
+        for line in feedbackData:
+            if line=="\n":
+                continue
+            name,comment=line.strip.split(",")
+            print(f"Name:    {name}")
+            print(f"Comment: {comment}")
+
+def update_profile():
+    """Allow user to update their password."""
+    users = load_users()
+    username=input("Enter Email or Username: ")
+    if username in users:
+        new_password = input("Enter your new password: ")
+        users[username][1] = new_password  # Update the password
+        save_users(users)  # Save changes to file
+        print("✅ Profile updated successfully!")
+    else:
+        print("❌ User not found.")
+
+
+def main():
+    print("Welcome to the admin Page\n")
+    print('''
+    Actions: 
+    1. Manage Staff
+    2. View Sales Report
+    3. View Customer Feedback
+    4. Update Profile
+
+    ''')
+
+    try: 
+        ActionChoice=int(input("Choose the action: "))
+        match ActionChoice:
+            case 1:
+                manageStaff()
+            case 2:
+                loadSales()
+            case 3:
+                loadFeedback()
+            case 4:
+                update_profile()
+    except: 
+        print("\nInvalid Input! Please try again")
+
+if __name__=="__main__":
+    main()
