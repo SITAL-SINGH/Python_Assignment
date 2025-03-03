@@ -27,15 +27,15 @@ def loadOrder():
         foodStatus={}
         Order_list=file.readlines()
         for line in Order_list:
-            foodName,amount,status=line.strip().split(",")
-            foodStatus[foodName]=[status,amount]
+            orderId,foodName,amount,status,paidAmount,orderDate=line.strip().split(",")
+            foodStatus[orderId]=[foodName,status,amount,paidAmount,orderDate]
         return foodStatus
     
 def SaveOrder(foodlist):
     with open("./Databases/OrderList.txt","w") as f:
-        for foodName,Details in foodlist.items():
-            status,amount=Details
-            f.write(f"{foodName},{amount},{status}\n")
+        for orderId,Details in foodlist.items():
+            foodName,status,amount,paidAmount,orderDate=Details
+            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate}\n")
         print("Updated Successfully")
 
 def loadIngredients():
@@ -60,11 +60,11 @@ def SaveIngredients(IngredientData):
 
 def viewOrder():
     Orders=loadOrder()
-    for foodName,Details in Orders.items():
-        status,amount=Details
-        print(f"food Name:       {foodName} ")
-        print(f"No of Serivings: {amount}")
-        print(f"Food Status:     {status}\n")
+    for orderId,Details in Orders.items():
+        foodName,status,amount,paidAmount,orderDate=Details
+        print(f"food Name:       {Orders[orderId][0]} ")
+        print(f"No of Serivings: {Orders[orderId][2]}")
+        print(f"Food Status:     {Orders[orderId][1]}\n")
         
         
 
@@ -73,12 +73,12 @@ def updateOrder():
     foodList=loadOrder()
     print(foodList)
     ValidStatus=["in progress", "completed"]
-    foodName=input("Food Name: ")
+    orderId=input("order Id: ")
     foodStatus=input("Update FoodStatus: ")
     if foodStatus.lower().strip() not in ValidStatus:
         print("Invalid input")
     else:
-        foodList[foodName][0]=foodStatus
+        foodList[orderId][1]=foodStatus
         SaveOrder(foodList)
 
 
@@ -166,7 +166,8 @@ def main():
         ''')
 
     try: 
-        ActionChoice=int(input("Choose the action: \n"))
+        ActionChoice=int(input("Choose the action: "))
+        print()
         match ActionChoice:
             case 1:
                 viewOrder()

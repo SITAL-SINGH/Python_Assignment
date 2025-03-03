@@ -106,12 +106,55 @@ def manageStaff():
     
     manage()
 
-
-
-
+def loadOrder():
+    with open("./Databases/OrderList.txt") as file:
+        foodStatus={}
+        Order_list=file.readlines()
+        for line in Order_list:
+            orderId,foodName,amount,status,paidAmount,orderDate=line.strip().split(",")
+            foodStatus[orderId]=[foodName,status,amount,paidAmount,orderDate]
+        return foodStatus
+    
+def SaveOrder(foodlist):
+    with open("./Databases/OrderList.txt","w") as f:
+        for orderId,Details in foodlist.items():
+            foodName,status,amount,paidAmount,orderDate=Details
+            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate}\n")
+        print("Updated Successfully")  
 
 def loadSales():
-    pass
+    """Allows the admin to view sales reports by month or chef."""
+    orders = loadOrder()
+    
+    print("\nSales Report Options:")
+    print("1. View sales by month")
+    print("2. View sales by chef")
+    choice = input("Enter your choice: ")
+    
+    if choice == "1":
+        month = input("Enter month (YYYY-MM): ")
+        total_sales =0
+        for data in orders.values():
+            orderMonth=data[4]
+            orderPaid=data[3]
+            if month==orderMonth:
+                total_sales=int(orderPaid)+total_sales
+        print(f"Total sales of month {orderMonth} is {total_sales}")
+
+    elif choice == "2":
+        chef_name = input("Enter chef's name: ")
+        total_sales=0
+        for data in orders.values:
+            chefName=
+
+
+        print(f"Total sales for Chef {chef_name}: ${chef_sales:.2f}")
+    else:
+        print("Invalid choice!")
+
+
+
+
 
 def loadFeedback():
     print("Feedback Section")

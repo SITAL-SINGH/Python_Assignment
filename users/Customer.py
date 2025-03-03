@@ -1,19 +1,35 @@
+import datetime
+import random
 
+''' load the order data from OrderList.txt file'''
+def loadOrder():
+    with open("./Databases/OrderList.txt") as file:
+        OrderItem={}
+        Order_list=file.readlines()
+        for line in Order_list:
+            orderId,foodName,amount,status,paidAmount,orderDate=line.strip().split(",")
+            OrderItem[orderId]=[foodName,status,amount,paidAmount,orderDate]
+        return OrderItem
+    
+def saveOrder(orderList):
+    with open("./Databases/OrderList.txt","w") as f:
+        for orderId,Details in orderList.items():
+            foodName,status,amount,paidAmount,orderDate=Details
+            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate}\n")
 
 
 ''' allow customer to add, edit and delete order and pay transaction'''
 def viewAndOrder():
-    def payTransaction(foodName,NoOfServings):
-        menuDetails=loadMenu()
+    def payTransaction(foodName,NoOfServings,menuItems):
         print("Pay Price For Confirmation")
-        for item in menuDetails.items():
+        for item in menuItems.items():
             if foodName.lower().strip() == item[0]:
                 needPrice=int(item[1])*int(NoOfServings)
                 print("Price Need To Be Paid: Rs",needPrice )
                 while True:
                     payAmount=int(input("Enter Price: "))
                     if payAmount==needPrice:
-                        return True
+                        return [True,payAmount]
                     else:
                         print("Insufficient amount")
         return False
@@ -34,28 +50,63 @@ def viewAndOrder():
         
 
     def orderAdd():
-        foodName=input("Food Name: ")
+        menuItems=loadMenu()
+        ''' calling menu function to show menu'''
+        viewMenu
+
+        while True:
+            foodName=input("Food Name: ")
+            if foodName not in menuItems:
+                print(f"{foodName} not available")
+            else: 
+                break
+
         NoOfServings=int(input("No of Servings: "))
         OrderStatus="in progress".capitalize()
-        with open("./Databases/OrderList.txt", "a") as f:
-            while True:
-                OrderConfirm=payTransaction(foodName,NoOfServings)
-                if OrderConfirm==True:
-                    f.write(f"{foodName},{NoOfServings},{OrderStatus}\n")
-                    print("Ordered Successfully")
-                    break
-                else:
-                    print("Order Unsuccessfull")
+        ''' choice for user to proceed or cancel the order'''
+        choice=input("Do you to confirm the order(yes/no): ")
+        if choice.strip().lower()=="yes":
+            with open("./Databases/OrderList.txt", "a") as f:
+                while True:
+                    OrderConfirm,paidAmount=payTransaction(foodName,NoOfServings,menuItems)
+                    if OrderConfirm==True:
+                        orderDate=datetime.date.today().strftime("%Y-%m") 
+                        orderId=random.randint(1,2000)
+                        f.write(f"{orderId},{foodName},{NoOfServings},{OrderStatus},{paidAmount},{orderDate}\n")
+                        print(f"Ordered Successfully. Your order id is{orderId}")
+                        break
+                    else:
+                        print("Order Unsuccessfull")
+        if choice.strip().lower()=="no":
+            print("order is cancelled")
         
     def orderEdit():
         ''' load all the orders '''
-        with open("./Databases/OrderList.txt" , "r" ) as f:
-            orderList=f.readlines()
+        orderList=loadOrder()
 
-            
+        ''' order id to edit'''
+        orderId=int(input("Enter Order id: "))
+        if orderId in orderList:
+            foodName=input("enter the food Name: ")
+            noOfServings=int("No of Servings: ")
+            orderList[orderId][0]=foodName  #changes the food name of the ordered item
+            orderList[orderId][2]=noOfServings # changes the number of servings
+
+            saveOrder(orderList) # calling saveOrder function to save the changes
+            print("Order Edited successfully")
+        else:
+            print("order not found")
             
     def orderDelete():
-        pass
+        orderList=loadOrder()
+
+        orderId = input("Enter order id to delete: ")
+        if  orderId in orderList:
+            del orderList[orderId]
+            saveOrder(orderList)
+            print("User deleted successfully!")
+        else:
+            print("User not found!")
 
 
     def CustomerOrder():
@@ -73,34 +124,37 @@ def viewAndOrder():
                 case 2: 
                     orderAdd()
                 case 3: 
-                    pass
+                    orderEdit()
                 case 4: 
-                    pass
+                    orderDelete()
         except:
             print("Invalid Input! please try again!!")
 
+
     CustomerOrder()
 
-''' allow customer to view the food status'''
-def viewStatus():
-    def loadOrder():
-        with open("./Databases/OrderList.txt") as file:
-            foodStatus={}
-            Order_list=file.readlines()
-            for line in Order_list:
-                foodName,amount,status=line.strip().split(",")
-                foodStatus[foodName]=[status,amount]
-            return foodStatus
-        
-    def OrderStatus():
-        OrderData=loadOrder()
-        for foodName,Details in OrderData.items():
-            status,amount=Details
-            print(f"Food Name:      {foodName}")
-            print(f"Status:         {status}")
-            print(f"No of Servings: {amount}\n")
 
-    OrderStatus()
+
+
+
+
+''' allow customer to view the food status'''
+        
+def OrderStatus():
+    OrderData=loadOrder()
+
+    orderid=input("enter order id to check status: ")
+    if orderid in OrderData:
+        for orderId,Details in OrderData.items():
+            foodName,status,amount,paidAmount,orderDate=Details
+            if orderid==orderId:
+                print(f"Food Name:      {OrderData[orderid][0]}")
+                print(f"Status:         {OrderData[orderid][1]}")
+                print(f"No of Servings: {OrderData[orderid][2]}\n")
+                break
+    else:
+        print("Order not found")
+
 
 ''' allow customer to send feedback '''
 def SendFeedBack():
@@ -172,7 +226,7 @@ def main():
             case 1:
                 viewAndOrder()
             case 2:
-                viewStatus()
+                OrderStatus()
             case 3:
                  SendFeedBack()
                 
