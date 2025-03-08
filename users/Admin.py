@@ -111,15 +111,15 @@ def loadOrder():
         foodStatus={}
         Order_list=file.readlines()
         for line in Order_list:
-            orderId,foodName,amount,status,paidAmount,orderDate=line.strip().split(",")
-            foodStatus[orderId]=[foodName,status,amount,paidAmount,orderDate]
+            orderId,foodName,amount,status,paidAmount,orderDate,completedBy=line.strip().split(",")
+            foodStatus[orderId]=[foodName,status,amount,paidAmount,orderDate,completedBy]
         return foodStatus
     
 def SaveOrder(foodlist):
     with open("./Databases/OrderList.txt","w") as f:
         for orderId,Details in foodlist.items():
-            foodName,status,amount,paidAmount,orderDate=Details
-            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate}\n")
+            foodName,status,amount,paidAmount,orderDate,completedBy=Details
+            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate},{completedBy}\n")
         print("Updated Successfully")  
 
 def loadSales():
@@ -144,11 +144,15 @@ def loadSales():
     elif choice == "2":
         chef_name = input("Enter chef's name: ")
         total_sales=0
-        for data in orders.values:
-            chefName=
+        for data in orders.values():
+            chefName=data[5]
+            orderPaid=data[3]
+            if chefName==chef_name:
+                total_sales=int(orderPaid)+total_sales
+        print(f"Total sales by chef {chef_name} is {total_sales}")
 
 
-        print(f"Total sales for Chef {chef_name}: ${chef_sales:.2f}")
+    #     print(f"Total sales for Chef {chef_name}: ${chef_sales:.2f}")
     else:
         print("Invalid choice!")
 

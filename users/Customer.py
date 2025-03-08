@@ -20,7 +20,7 @@ def saveOrder(orderList):
 
 ''' allow customer to add, edit and delete order and pay transaction'''
 def viewAndOrder():
-    def payTransaction(foodName,NoOfServings,menuItems):
+    def payTransaction(foodName,menuItems,NoOfServings):
         print("Pay Price For Confirmation")
         for item in menuItems.items():
             if foodName.lower().strip() == item[0]:
@@ -56,23 +56,36 @@ def viewAndOrder():
 
         while True:
             foodName=input("Food Name: ")
-            if foodName not in menuItems:
+            if foodName.strip().lower() not in menuItems:
                 print(f"{foodName} not available")
             else: 
                 break
-
+            # foodNames=foodNames.split(",")
+            # orderedFood={}
+            # for food in foodNames:
+            #     if food.strip().lower() not in menuItems:
+            #         print(f"{food} not available")
+            #     else: 
+            #         NoOfServings=int(input("No of Servings: "))
+            #         orderedFood[food]=NoOfServings    # stores in orderedFood
+            
+            # if not orderedFood:
+            #     print("No valid items selected. Please try again.")
+            #     continue  
         NoOfServings=int(input("No of Servings: "))
         OrderStatus="in progress".capitalize()
         ''' choice for user to proceed or cancel the order'''
         choice=input("Do you to confirm the order(yes/no): ")
+
         if choice.strip().lower()=="yes":
             with open("./Databases/OrderList.txt", "a") as f:
                 while True:
-                    OrderConfirm,paidAmount=payTransaction(foodName,NoOfServings,menuItems)
+                    OrderConfirm,paidAmount=payTransaction(foodName,menuItems,NoOfServings)
                     if OrderConfirm==True:
                         orderDate=datetime.date.today().strftime("%Y-%m") 
                         orderId=random.randint(1,2000)
-                        f.write(f"{orderId},{foodName},{NoOfServings},{OrderStatus},{paidAmount},{orderDate}\n")
+                        completedBy=""
+                        f.write(f"{orderId},{foodName},{NoOfServings},{OrderStatus},{paidAmount},{orderDate},{completedBy}\n")
                         print(f"Ordered Successfully. Your order id is{orderId}")
                         break
                     else:

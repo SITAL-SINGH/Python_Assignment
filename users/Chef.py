@@ -27,15 +27,15 @@ def loadOrder():
         foodStatus={}
         Order_list=file.readlines()
         for line in Order_list:
-            orderId,foodName,amount,status,paidAmount,orderDate=line.strip().split(",")
-            foodStatus[orderId]=[foodName,status,amount,paidAmount,orderDate]
+            orderId,foodName,amount,status,paidAmount,orderDate,completedBy=line.strip().split(",")
+            foodStatus[orderId]=[foodName,status,amount,paidAmount,orderDate,completedBy]
         return foodStatus
     
 def SaveOrder(foodlist):
     with open("./Databases/OrderList.txt","w") as f:
         for orderId,Details in foodlist.items():
-            foodName,status,amount,paidAmount,orderDate=Details
-            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate}\n")
+            foodName,status,amount,paidAmount,orderDate,completedBy=Details
+            f.write(f"{orderId},{foodName},{amount},{status},{paidAmount},{orderDate},{completedBy}\n")
         print("Updated Successfully")
 
 def loadIngredients():
@@ -61,7 +61,7 @@ def SaveIngredients(IngredientData):
 def viewOrder():
     Orders=loadOrder()
     for orderId,Details in Orders.items():
-        foodName,status,amount,paidAmount,orderDate=Details
+        print(f"order Id :       {orderId}")
         print(f"food Name:       {Orders[orderId][0]} ")
         print(f"No of Serivings: {Orders[orderId][2]}")
         print(f"Food Status:     {Orders[orderId][1]}\n")
@@ -71,14 +71,15 @@ def viewOrder():
 
 def updateOrder():
     foodList=loadOrder()
-    print(foodList)
     ValidStatus=["in progress", "completed"]
     orderId=input("order Id: ")
     foodStatus=input("Update FoodStatus: ")
+    completedBy=input("Chefs Name: ")
     if foodStatus.lower().strip() not in ValidStatus:
         print("Invalid input")
     else:
         foodList[orderId][1]=foodStatus
+        foodList[orderId][5]=completedBy
         SaveOrder(foodList)
 
 
