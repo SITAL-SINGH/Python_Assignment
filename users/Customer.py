@@ -154,9 +154,6 @@ def viewAndOrder():
 
 
 
-
-
-
         
 ''' allow customer to view the food status'''
 def OrderStatus():

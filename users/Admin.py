@@ -62,7 +62,8 @@ def manageStaff():
             users[existEmail][0] = name  # Update the name
             users[existEmail][1] = new_password  # Update the password
             users[existEmail][2] = role  # Update the role
-            users[existEmail] = newUsername  # Update the email or password
+            users.update({newUsername: users[existEmail]}) # update the username
+            del users[existEmail]
             save_users(users)  # Save changes to file
             print("Profile updated successfully!")
             
@@ -170,9 +171,9 @@ def loadFeedback():
         for line in feedbackData:
             if line=="\n":
                 continue
-            name,comment=line.strip.split(",")
+            name,comment=line.strip().split(",")
             print(f"Name:    {name}")
-            print(f"Comment: {comment}")
+            print(f"Comment: {comment}\n")
 
 def update_profile():
     """Allow amdin to update their password."""

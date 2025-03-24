@@ -70,7 +70,8 @@ def ManageCustomer():
             users[existEmail][0] = name  # Update the name
             users[existEmail][1] = new_password  # Update the password
             users[existEmail][2] = role  # Update the role
-            users[existEmail] = newUsername  # Update the email or password
+            users.update({newUsername: users[existEmail]}) # update the username
+            del users[existEmail] 
             save_users(users)  # Save changes to file
             print("rofile updated successfully!")
             
@@ -156,10 +157,10 @@ def ManageMenu():
         
             menuData[existFood] = price  # Update the price of the food
             saveMenu(menuData)  # Save changes to file
-            print("✅ Profile updated successfully!")
+            print("Profile updated successfully!")
             
         else:
-            print("❌ User not found.")
+            print("User not found.")
 
         """allow manager to delete the menu items"""
     def deleteMenu():
@@ -219,9 +220,9 @@ def update_profile():
         new_password = input("Enter your new password: ")
         users[username][1] = new_password  # Update the password
         save_users(users)  # Save changes to file
-        print("✅ Profile updated successfully!")
+        print("Profile updated successfully!")
     else:
-        print("❌ User not found.")
+        print("User not found.")
 
 ''' main interface for manager to navigate'''
 def main():
