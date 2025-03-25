@@ -64,18 +64,7 @@ def viewAndOrder():
                 print(f"{foodName} not available")
             else: 
                 break
-            # foodNames=foodNames.split(",")
-            # orderedFood={}
-            # for food in foodNames:
-            #     if food.strip().lower() not in menuItems:
-            #         print(f"{food} not available")
-            #     else: 
-            #         NoOfServings=int(input("No of Servings: "))
-            #         orderedFood[food]=NoOfServings    # stores in orderedFood
-            
-            # if not orderedFood:
-            #     print("No valid items selected. Please try again.")
-            #     continue  
+             
         NoOfServings=int(input("No of Servings: "))
         OrderStatus="in progress".capitalize()
         ''' choice for user to proceed or cancel the order'''
@@ -90,7 +79,7 @@ def viewAndOrder():
                         orderId=random.randint(1,10000)
                         completedBy=""
                         f.write(f"{orderId},{foodName},{NoOfServings},{OrderStatus},{paidAmount},{orderDate},{completedBy}\n")
-                        print(f"Ordered Successfully. Your order id is{orderId}")
+                        print(f"Ordered Successfully. Your order id is {orderId}")
                         break
                     else:
                         print("Order Unsuccessfull")
@@ -103,10 +92,10 @@ def viewAndOrder():
         orderList=loadOrder()
 
         ''' order id to edit'''
-        orderId=int(input("Enter Order id: "))
+        orderId=input("Enter Order id: ")
         if orderId in orderList:
             foodName=input("enter the food Name: ")
-            noOfServings=int("No of Servings: ")
+            noOfServings=int(input("No of Servings: "))
             orderList[orderId][0]=foodName  #changes the food name of the ordered item
             orderList[orderId][2]=noOfServings # changes the number of servings
 
@@ -130,7 +119,7 @@ def viewAndOrder():
     ''' Interface for customer to navigate'''
     def CustomerOrder():
         print(''' Actions: 
-        1.View Menu
+        1. View Menu
         2. Order food
         3. change food
         4. Cancel ordered food ''')
@@ -146,6 +135,8 @@ def viewAndOrder():
                     orderEdit()
                 case 4: 
                     orderDelete()
+                case _:
+                    print("Invalid input!!!")
         except:
             print("Invalid Input! please try again!!")
 
@@ -162,7 +153,6 @@ def OrderStatus():
     orderid=input("enter order id to check status: ")
     if orderid in OrderData:
         for orderId,Details in OrderData.items():
-            foodName,status,amount,paidAmount,orderDate,chefName=Details
             if orderid==orderId:
                 print(f"Food Name:      {OrderData[orderid][0]}")
                 print(f"Status:         {OrderData[orderid][1]}")
@@ -196,8 +186,8 @@ def load_users():
                 print(f"Skipping malformed line: {line}")  
                 continue  
             name, username, password, role = parts
-            if role=="customer":
-                users[username] = [name, password, role]
+            
+            users[username] = [name, password, role]
     return users
 
 
@@ -250,6 +240,8 @@ def main():
                 
             case 4:
                 update_profile()
+            case _: 
+                print("Invalid input!!!")
     except: 
         print("\nInvalid Input! Please try again")
 

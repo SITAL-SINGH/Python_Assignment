@@ -11,8 +11,8 @@ def load_users():
                 print(f"Skipping malformed line: {line}")  
                 continue  
             name, username, password, role = parts
-            if role=="chef":
-                users[username] = [name, password, role]
+            users[username] = [name, password, role]
+            
     return users
 
 def save_users(users):
@@ -120,7 +120,7 @@ def requestIngredients():
         foodName = input("Enter foodName that you want to delete: ")
         if foodName in IngredientsData:
             del IngredientsData[foodName]
-            save_users(IngredientsData)
+            SaveIngredients(IngredientsData)
             print("User deleted successfully!")
         else:
             print("User not found!")
@@ -132,20 +132,25 @@ def requestIngredients():
         print("2. Edit")
         print("3. Delete")
 
-        validInputs=("1","2","3","add","edit","delete")
-        # input for which action to perform
-        AdiminAction=input("Choose the action: ")
-        if AdiminAction in validInputs:
-            if AdiminAction=="add" or AdiminAction=="1" :
-                AddIngredients()
-            
-            elif AdiminAction=="edit" or AdiminAction=="2":
-                EditIngredients()
+        validInputs=(1,2,3)
+        try: 
+            # input for which action to perform
+            AdiminAction=int(input("Choose the action: "))
+            if AdiminAction in validInputs:
+                if AdiminAction==1:
+                    AddIngredients()
+                
+                elif AdiminAction==2:
+                    EditIngredients()
 
-            elif AdiminAction=="delete" or AdiminAction=="3":
-                DeleteIngredients()
-        else:
-            raise("Not valid Action")
+                elif AdiminAction=="3":
+                    DeleteIngredients()
+            else:
+                raise("Not valid Action")
+        except ValueError:
+            print("Invalid input!!!")
+        except: 
+            print("Invalid Input!!!")
         
     manage()
     
@@ -186,6 +191,8 @@ def main():
                 
             case 4:
                 update_profile()
+            case _:
+                print("invalid input!!!")
     except: 
         print("\nInvalid Input! Please try again")
 

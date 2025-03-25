@@ -2,3 +2,4 @@ momo,155
 chaumen,150
 chauchau,100
 pastries,50
+samosa,20

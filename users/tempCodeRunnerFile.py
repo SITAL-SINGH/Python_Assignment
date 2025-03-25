@@ -1,2 +1,2 @@
-users.update({newUsername: users[existEmail]}) # update the username
-            del users[existEmail]
+ users = load_users()
+        name=input("Name: ")

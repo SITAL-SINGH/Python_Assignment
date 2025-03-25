@@ -1,2 +1,4 @@
-sital,sital@123,sital123,customer
+sital,sital@123,sital,customer
 sandesh,sandesh@123,sandesh,manager
+ram,ram@123,ram,chef
+sunil,sunil@123,sunil,admin

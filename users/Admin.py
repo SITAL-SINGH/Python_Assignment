@@ -55,7 +55,14 @@ def manageStaff():
         existEmail=input("Existing Username/Email: ")
         if existEmail in users:
             name=input("New Name: ")
-            newUsername=input("New Email/Username: ")
+            # for already taken email
+            while True: 
+                username = input("Enter new username: ")
+                if username in users:
+                    print("Username already exists!")
+                else:
+                    break
+        
             new_password = input("Enter your new password: ")
             role = input("Enter role (Admin/Manager/Chef/Customer): ")
         
@@ -89,22 +96,26 @@ def manageStaff():
         print("3. Delete")
         
         validInputs=("1","2","3","add","edit","delete") #Correct inputs
-        # input for which action to perform
-        AdiminAction=input("Choose the action: ")
-        AdiminAction=AdiminAction.strip().lower()
-        if AdiminAction in validInputs:
-            if AdiminAction=="add" or AdiminAction=="1":
-                add_staff()
-            
-            elif AdiminAction=="edit" or AdiminAction=="2":
-                editStaff()
+        try:
+            # input for which action to perform
+            AdiminAction=int(input("Choose the action: "))
+            AdiminAction=AdiminAction.strip()
+            if AdiminAction in validInputs:
+                if AdiminAction==1:
+                    add_staff()
+                
+                elif AdiminAction==2:
+                    editStaff()
 
-            elif AdiminAction=="delete" or AdiminAction=="3":
-                delete_staff()
-        
-        else:
-            raise("Not valid Action")
-    
+                elif AdiminAction==3:
+                    delete_staff()
+            
+            else:
+                raise("Not valid Action")
+        except ValueError:
+            print("Invalid Input!!!!")
+        except:
+            print("Invalid Input!!!!")
     manage()
 
 ''' Load the orders form OrderList.txt'''
@@ -210,6 +221,9 @@ def main():
                 loadFeedback()
             case 4:
                 update_profile()
+
+            case _:
+                print("Invalid Input!!!")
     except: 
         print("\nInvalid Input! Please try again")
 

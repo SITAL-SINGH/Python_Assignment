@@ -14,8 +14,8 @@ def load_users():
                 print(f" Skipping malformed line: {line}")  
                 continue  
             name, username, password, role = parts
-            if role in ["manager","customer"]:
-                users[username] = [name, password, role]
+            users[username] = [name, password, role]
+            
             
     return users
 
@@ -45,9 +45,9 @@ def ManageCustomer():
                 break
         password = input("Enter password: ")
         while True:
-            role = input("Enter role (Admin/Manager/Chef/Customer): ")
+            role = input("Enter role (Chef/Customer): ")
             if role.strip().lower() not in ["customer"]:
-                print("Invalid role!!")
+                print("You Have no permission")
             else:
                 break
 
@@ -65,7 +65,12 @@ def ManageCustomer():
             name=input("New Name: ")
             newUsername=input("New Email/Username: ")
             new_password = input("Enter your new password: ")
-            role = input("Enter role (Admin/Manager/Chef/Customer): ")
+            while True: 
+                role = input("Enter role (chef/Customer): ")
+                if role.strip().lower() not in ["customer"]:
+                    print("You Have no permission")
+                else:
+                    break
         
             users[existEmail][0] = name  # Update the name
             users[existEmail][1] = new_password  # Update the password
@@ -95,21 +100,26 @@ def ManageCustomer():
         print("2. Edit")
         print("3. Delete")
 
-        validInputs=("add","edit","delete","1","2","3")
-        # input for which action to perform
-        AdiminAction=input("Choose the action: ")
-        AdiminAction=AdiminAction.strip().lower()
-        if AdiminAction in validInputs:
-            if AdiminAction=="add" or AdiminAction=="1" :
-                add_Customer()
-            
-            elif AdiminAction=="edit" or AdiminAction=="2" :
-                editCustomer()
+        validInputs=(1,2,3)
+        try:
+            # input for which action to perform
+            AdiminAction=input("Choose the action: ")
+            AdiminAction=AdiminAction.strip().lower()
+            if AdiminAction in validInputs:
+                if AdiminAction==1:
+                    add_Customer()
+                
+                elif AdiminAction==2:
+                    editCustomer()
 
-            elif AdiminAction=="delete" or AdiminAction=="3" :
-                delete_Customer()
-        else:
-            print("invalid Action")
+                elif AdiminAction==3:
+                    delete_Customer()
+            else:
+                print("invalid Action")
+        except ValueError:
+            print("Invalid action")
+        except:
+            print("Invalid action")
 
 
     manage() # calling the manage function
@@ -134,7 +144,7 @@ def ManageMenu():
             for foodName, price in menuData.items():
                 file.write(f"{foodName},{price}\n")
     
-    ''' allow manager to add new food item in menu '''
+    '''  manager to add new food item in menu '''
     def AddItem():
         ''' allow food to added in the menu'''
         menuData=loadMenu()
@@ -147,6 +157,8 @@ def ManageMenu():
         price=input("Price: ")
         # appending the data in menuData
         menuData[foodName]=price
+        saveMenu(menuData)
+        print("Item added succesfully")
 
     ''' allow manager to edit the menu data'''
     def editMenu():
@@ -168,7 +180,7 @@ def ManageMenu():
         existfood = input("Enter foodName that you want to delete: ")
         if existfood in menuData:
             del menuData[existfood]
-            save_users(menuData)
+            saveMenu(menuData)
             print("User deleted successfully!")
         else:
             print("User not found!")
@@ -179,22 +191,26 @@ def ManageMenu():
         print("2. Edit")
         print("3. Delete")
         
-        validInputs=("add","edit","delete","1","2","3")
-        # input for which action to perform
-        AdiminAction=input("Choose the action: ")
-        AdiminAction=AdiminAction.strip().lower()
-        if AdiminAction in validInputs:
-            if AdiminAction=="add" or AdiminAction=="1":
-                AddItem()
-            
-            elif AdiminAction=="edit" or AdiminAction=="2":
-                editMenu()
+        validInputs=(1,2,3)
+        try:
+            # input for which action to perform
+            AdiminAction=int(input("Choose the action: "))
+            AdiminAction=AdiminAction.strip()
+            if AdiminAction in validInputs:
+                if AdiminAction==1:
+                    AddItem()
+                
+                elif AdiminAction==2:
+                    editMenu()
 
-            elif AdiminAction=="delete" or AdiminAction=="3":
-                deleteMenu()
-        else:
-            print("Invalid Action!!")
-
+                elif AdiminAction==3:
+                    deleteMenu()
+            else:
+                print("Invalid Action!!")
+        except ValueError:
+                print("Invalid Error!!! ")
+        except:
+                print("Invalid Error!!! ")
 
     manage()
 
@@ -226,7 +242,7 @@ def update_profile():
 
 ''' main interface for manager to navigate'''
 def main():
-    print("Welcome to the admin Page\n")
+    print("Welcome to the Manager Page\n")
     print('''
     Actions: 
     1. Manage Customer
@@ -246,6 +262,10 @@ def main():
                 viewIngredients()
             case 4:
                 update_profile()
+            case _:
+                print("Invalid input!!!")
+    except ValueError: 
+        print("\nInvalid Input! Please try again")
     except: 
         print("\nInvalid Input! Please try again")
 
